@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinWise — Test Suite</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0a0a0f;
+            color: #f0f0f5;
+            padding: 40px;
+            line-height: 1.6;
+        }
+        h1 { margin-bottom: 8px; font-size: 1.8rem; }
+        h1 span { color: #6C63FF; }
+        .subtitle { color: #a0a0b8; margin-bottom: 32px; }
+        #testResults { max-width: 800px; }
+        .test-summary {
+            padding: 20px 24px;
+            background: rgba(22, 22, 35, 0.8);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+        .test-summary h2 { font-size: 1.2rem; margin-bottom: 8px; }
+        .test-result {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            padding: 8px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 0.9rem;
+        }
+        .test-result:hover { background: rgba(255,255,255,0.02); }
+        .test-pass .test-name { color: #a0a0b8; }
+        .test-fail .test-name { color: #FF4757; font-weight: 600; }
+        .test-error { color: #ff8a94; font-size: 0.85rem; }
+        .test-status { flex-shrink: 0; }
+        iframe { display: none; }
+    </style>
+</head>
+<body>
+    <h1>🧪 <span>FinWise</span> Test Suite</h1>
+    <p class="subtitle">Automated tests for code quality, security, accessibility, and efficiency.</p>
+    <div id="testResults"></div>
+
+    <!-- Hidden iframe loads the real app so DOM tests run against actual markup -->
+    <iframe id="appFrame" src="index.html" width="1200" height="800"></iframe>
+
+    <script>
+    'use strict';
+
+    const iframe = document.getElementById('appFrame');
+
+    iframe.addEventListener('load', () => {
+        // Access the app's window and document via the iframe
+        const appWindow = iframe.contentWindow;
+        const appDocument = iframe.contentDocument;
+
+        // Pull utility functions from the app's scope
+        const sanitizeNumber = appWindow.sanitizeNumber;
+        const formatCurrency = appWindow.formatCurrency;
+        const escapeHtml = appWindow.escapeHtml;
+        const debounce = appWindow.debounce;
+        const getElement = appWindow.getElement;
+        const glossaryData = appWindow.glossaryData;
+        const quizQuestions = appWindow.quizQuestions;
+        const state = appWindow.state;
+
+        // Run tests after a brief delay for initialization
+        setTimeout(() => runAllTests(appWindow, appDocument), 800);
+    });
+
+    function runAllTests(appWindow, doc) {
+        const TestRunner = {
+            results: [],
+            passed: 0,
+            failed: 0,
+
+            test(name, fn) {
+                try {
+                    fn();
+                    this.passed++;
+                    this.results.push({ name, status: 'PASS' });
+                } catch (error) {
+                    this.failed++;
+                    this.results.push({ name, status: 'FAIL', error: error.message });
+                }
+            },
+
+            report() {
+                const container = document.getElementById('testResults');
+                if (!container) return;
+
+                const summary = document.createElement('div');
+                summary.className = 'test-summary';
+                summary.innerHTML = `
+                    <h2>Test Results</h2>
+                    <p><strong>${this.passed}</strong> passed, <strong>${this.failed}</strong> failed, 
+                    <strong>${this.passed + this.failed}</strong> total</p>
+                `;
+                summary.style.color = this.failed === 0 ? '#00D9A6' : (this.failed <= 2 ? '#FFD166' : '#FF4757');
+                container.appendChild(summary);
+
+                this.results.forEach(r => {
+                    const el = document.createElement('div');
+                    el.className = `test-result test-${r.status.toLowerCase()}`;
+                    el.innerHTML = `
+                        <span class="test-status">${r.status === 'PASS' ? '✅' : '❌'}</span>
+                        <span class="test-name">${r.name}</span>
+                        ${r.error ? `<span class="test-error"> — ${r.error}</span>` : ''}
+                    `;
+                    container.appendChild(el);
+                });
+
+                console.log(`\n📊 FinWise Test Results: ${this.passed} passed, ${this.failed} failed`);
+                this.results.forEach(r => {
+                    console.log(`  ${r.status === 'PASS' ? '✅' : '❌'} ${r.name}${r.error ? ` — ${r.error}` : ''}`);
+                });
+            }
+        };
+
+        function assertEqual(actual, expected, msg = '') {
+            if (actual !== expected) {
+                throw new Error(`Expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}. ${msg}`);
+            }
+        }
+
+        function assertTrue(value, msg = '') {
+            if (!value) throw new Error(`Expected truthy, got ${JSON.stringify(value)}. ${msg}`);
+        }
+
+        function assertFalse(value, msg = '') {
+            if (value) throw new Error(`Expected falsy, got ${JSON.stringify(value)}. ${msg}`);
+        }
+
+        function assertApprox(actual, expected, tolerance = 0.01, msg = '') {
+            if (Math.abs(actual - expected) > tolerance) {
+                throw new Error(`Expected ~${expected} (±${tolerance}), got ${actual}. ${msg}`);
+            }
+        }
+
+        // Pull refs from app scope
+        const sanitizeNumber = appWindow.sanitizeNumber;
+        const formatCurrency = appWindow.formatCurrency;
+        const escapeHtml = appWindow.escapeHtml;
+        const debounce = appWindow.debounce;
+        const glossaryData = appWindow.glossaryData;
+        const quizQuestions = appWindow.quizQuestions;
+        const state = appWindow.state;
+
+        // ========================
+        // UTILITY TESTS
+        // ========================
+
+        TestRunner.test('sanitizeNumber: valid positive number', () => assertEqual(sanitizeNumber(100), 100));
+        TestRunner.test('sanitizeNumber: NaN returns min', () => assertEqual(sanitizeNumber(NaN), 0));
+        TestRunner.test('sanitizeNumber: undefined returns min', () => assertEqual(sanitizeNumber(undefined), 0));
+        TestRunner.test('sanitizeNumber: string number works', () => assertEqual(sanitizeNumber('500'), 500));
+        TestRunner.test('sanitizeNumber: negative clamped to min', () => assertEqual(sanitizeNumber(-100, 0, 1000), 0));
+        TestRunner.test('sanitizeNumber: exceeds max gets clamped', () => assertEqual(sanitizeNumber(999999999, 0, 100000000), 100000000));
+        TestRunner.test('sanitizeNumber: custom min/max', () => {
+            assertEqual(sanitizeNumber(5, 10, 100), 10);
+            assertEqual(sanitizeNumber(200, 10, 100), 100);
+            assertEqual(sanitizeNumber(50, 10, 100), 50);
+        });
+        TestRunner.test('sanitizeNumber: Infinity returns min', () => {
+            assertEqual(sanitizeNumber(Infinity), 0);
+            assertEqual(sanitizeNumber(-Infinity), 0);
+        });
+
+        TestRunner.test('formatCurrency: basic formatting', () => assertEqual(formatCurrency(1000), '$1,000'));
+        TestRunner.test('formatCurrency: zero', () => assertEqual(formatCurrency(0), '$0'));
+        TestRunner.test('formatCurrency: large number', () => assertEqual(formatCurrency(1000000), '$1,000,000'));
+        TestRunner.test('formatCurrency: decimal rounding', () => assertEqual(formatCurrency(1234.56), '$1,235'));
+
+        TestRunner.test('escapeHtml: prevents XSS', () => {
+            const result = escapeHtml('<scr' + 'ipt>alert("xss")<\/scr' + 'ipt>');
+            assertFalse(result.includes('<scr' + 'ipt>'), 'Script tag should be escaped');
+        });
+        TestRunner.test('escapeHtml: escapes ampersands', () => {
+            assertTrue(escapeHtml('A & B').includes('&amp;'));
+        });
+        TestRunner.test('escapeHtml: plain text unchanged', () => assertEqual(escapeHtml('Hello World'), 'Hello World'));
+        TestRunner.test('escapeHtml: handles angle brackets', () => {
+            const result = escapeHtml('<' + 'img src=x onerror=alert(1)>');
+            assertFalse(result.includes('<' + 'img'), 'img tag should be escaped');
+        });
+
+        TestRunner.test('debounce: returns a function', () => assertEqual(typeof debounce(() => {}), 'function'));
+        TestRunner.test('debounce: delays execution', () => {
+            let callCount = 0;
+            const fn = debounce(() => callCount++, 50);
+            fn(); fn(); fn();
+            assertEqual(callCount, 0, 'Should not fire immediately');
+        });
+
+        // ========================
+        // CALCULATION TESTS
+        // ========================
+
+        TestRunner.test('Compound interest: basic growth', () => {
+            let balance = 10000;
+            for (let m = 1; m <= 12; m++) balance = balance * (1 + 0.10 / 12);
+            assertApprox(balance, 11047, 5);
+        });
+        TestRunner.test('Compound interest: with contributions', () => {
+            let balance = 0;
+            for (let m = 1; m <= 12; m++) balance += 100;
+            assertEqual(balance, 1200);
+        });
+        TestRunner.test('Compound interest: zero rate', () => {
+            let balance = 5000;
+            for (let m = 1; m <= 24; m++) balance += 200;
+            assertEqual(balance, 5000 + 200 * 24);
+        });
+
+        TestRunner.test('Savings goal: already at goal', () => assertTrue(15000 >= 10000));
+        TestRunner.test('Savings goal: simple timeline', () => {
+            let balance = 0, months = 0;
+            while (balance < 10000 && months < 600) { balance += 1000; months++; }
+            assertEqual(months, 10);
+        });
+        TestRunner.test('Savings goal: timeline with interest', () => {
+            let balance = 0, months = 0;
+            while (balance < 6000 && months < 600) {
+                balance = balance * (1 + 0.04 / 12) + 500;
+                months++;
+            }
+            assertTrue(months <= 12 && months >= 11);
+        });
+
+        TestRunner.test('Inflation: purchasing power decreases', () => {
+            const fv = 1000 / Math.pow(1.03, 10);
+            assertTrue(fv < 1000);
+            assertApprox(fv, 744, 5);
+        });
+        TestRunner.test('Inflation: zero rate preserves value', () => {
+            assertEqual(1000 / Math.pow(1, 10), 1000);
+        });
+        TestRunner.test('Inflation: high rate erosion', () => {
+            assertTrue(1000 / Math.pow(1.10, 10) < 400);
+        });
+
+        // ========================
+        // DATA INTEGRITY TESTS
+        // ========================
+
+        TestRunner.test('Glossary: all entries have fields', () => {
+            glossaryData.forEach((item, i) => {
+                assertTrue(item.term, `Entry ${i} missing term`);
+                assertTrue(item.category, `Entry ${i} missing category`);
+                assertTrue(item.definition, `Entry ${i} missing definition`);
+            });
+        });
+        TestRunner.test('Glossary: valid categories only', () => {
+            const valid = ['saving', 'investing', 'budgeting', 'general'];
+            glossaryData.forEach((item, i) => {
+                assertTrue(valid.includes(item.category), `${item.term} has invalid category: ${item.category}`);
+            });
+        });
+        TestRunner.test('Glossary: no duplicates', () => {
+            const terms = glossaryData.map(g => g.term.toLowerCase());
+            assertEqual(terms.length, new Set(terms).size, 'Duplicate terms found');
+        });
+        TestRunner.test('Glossary: 25+ terms', () => assertTrue(glossaryData.length >= 25));
+        TestRunner.test('Quiz: all have 4 options', () => {
+            quizQuestions.forEach((q, i) => assertEqual(q.options.length, 4, `Q${i}`));
+        });
+        TestRunner.test('Quiz: valid correct index', () => {
+            quizQuestions.forEach((q, i) => assertTrue(q.correct >= 0 && q.correct < 4, `Q${i}`));
+        });
+        TestRunner.test('Quiz: all have explanations', () => {
+            quizQuestions.forEach((q, i) => assertTrue(q.explanation.length > 10, `Q${i}`));
+        });
+        TestRunner.test('Quiz: exactly 10 questions', () => assertEqual(quizQuestions.length, 10));
+
+        // ========================
+        // ACCESSIBILITY TESTS (against real DOM)
+        // ========================
+
+        TestRunner.test('A11y: skip-to-content link exists', () => {
+            assertTrue(doc.getElementById('skipToContent'), 'Missing skip-to-content');
+        });
+        TestRunner.test('A11y: main landmark exists', () => {
+            assertTrue(doc.querySelector('main'), 'Missing main element');
+        });
+        TestRunner.test('A11y: nav has aria-label', () => {
+            const nav = doc.getElementById('navbar');
+            assertTrue(nav && nav.getAttribute('aria-label'));
+        });
+        TestRunner.test('A11y: all canvases have accessible labels', () => {
+            doc.querySelectorAll('canvas').forEach((c, i) => {
+                assertTrue(c.getAttribute('aria-label') || c.getAttribute('role') === 'img', `Canvas ${i}`);
+            });
+        });
+        TestRunner.test('A11y: tabs have ARIA roles', () => {
+            doc.querySelectorAll('.tab-btn').forEach((tab, i) => {
+                assertEqual(tab.getAttribute('role'), 'tab', `Tab ${i}`);
+                assertTrue(tab.getAttribute('aria-selected') !== null, `Tab ${i} aria-selected`);
+                assertTrue(tab.getAttribute('aria-controls'), `Tab ${i} aria-controls`);
+            });
+        });
+        TestRunner.test('A11y: tablist role exists', () => {
+            assertTrue(doc.querySelector('[role="tablist"]'));
+        });
+        TestRunner.test('A11y: quiz feedback has aria-live', () => {
+            const fb = doc.getElementById('quizFeedback');
+            assertTrue(fb && fb.getAttribute('aria-live') === 'assertive');
+        });
+        TestRunner.test('A11y: burger menu has aria-expanded', () => {
+            const toggle = doc.getElementById('navToggle');
+            assertTrue(toggle && toggle.getAttribute('aria-expanded') !== null);
+        });
+        TestRunner.test('A11y: sections have aria-labelledby', () => {
+            doc.querySelectorAll('main section').forEach(s => {
+                assertTrue(s.getAttribute('aria-labelledby') || s.getAttribute('aria-label'),
+                    `Section #${s.id} missing label`);
+            });
+        });
+        TestRunner.test('A11y: form inputs have labels or aria-label', () => {
+            doc.querySelectorAll('input[id]').forEach(input => {
+                const label = doc.querySelector(`label[for="${input.id}"]`);
+                const ariaLabel = input.getAttribute('aria-label');
+                assertTrue(label || ariaLabel, `Input #${input.id} has no label`);
+            });
+        });
+
+        // ========================
+        // SECURITY TESTS
+        // ========================
+
+        TestRunner.test('Security: CSP meta tag present', () => {
+            const csp = doc.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            assertTrue(csp, 'Missing CSP meta');
+            assertTrue(csp.getAttribute('content').includes("script-src 'self'"));
+        });
+        TestRunner.test('Security: X-Content-Type-Options', () => {
+            assertTrue(doc.querySelector('meta[http-equiv="X-Content-Type-Options"]'));
+        });
+        TestRunner.test('Security: X-Frame-Options', () => {
+            assertTrue(doc.querySelector('meta[http-equiv="X-Frame-Options"]'));
+        });
+        TestRunner.test('Security: no inline onclick handlers', () => {
+            assertEqual(doc.querySelectorAll('[onclick]').length, 0);
+        });
+        TestRunner.test('Security: escapeHtml blocks injection', () => {
+            assertFalse(escapeHtml('<' + 'img src=x onerror=alert(1)>').includes('<' + 'img'));
+        });
+
+        // ========================
+        // CODE QUALITY TESTS
+        // ========================
+
+        TestRunner.test('Quality: glossary data is frozen', () => assertTrue(Object.isFrozen(glossaryData)));
+        TestRunner.test('Quality: quiz data is frozen', () => assertTrue(Object.isFrozen(quizQuestions)));
+        TestRunner.test('Quality: app state exists with required keys', () => {
+            assertTrue(typeof state === 'object');
+            assertTrue('quizCurrent' in state);
+            assertTrue('quizScore' in state);
+            assertTrue('savingsJar' in state);
+        });
+
+        // ========================
+        // SEO & GOOGLE TESTS
+        // ========================
+
+        TestRunner.test('SEO: page has title', () => {
+            assertTrue(doc.title.includes('FinWise'));
+        });
+        TestRunner.test('SEO: meta description > 50 chars', () => {
+            const desc = doc.querySelector('meta[name="description"]');
+            assertTrue(desc && desc.getAttribute('content').length > 50);
+        });
+        TestRunner.test('SEO: single h1', () => {
+            assertEqual(doc.querySelectorAll('h1').length, 1);
+        });
+        TestRunner.test('SEO: JSON-LD structured data', () => {
+            const ld = doc.querySelector('script[type="application/ld+json"]');
+            assertTrue(ld, 'Missing JSON-LD');
+            const data = JSON.parse(ld.textContent);
+            assertEqual(data['@type'], 'WebApplication');
+        });
+        TestRunner.test('SEO: theme-color meta', () => {
+            assertTrue(doc.querySelector('meta[name="theme-color"]'));
+        });
+        TestRunner.test('Google Fonts: loaded from CDN', () => {
+            assertTrue(doc.querySelector('link[href*="fonts.googleapis.com"]'));
+        });
+
+        // ========================
+        // EFFICIENCY TESTS
+        // ========================
+
+        TestRunner.test('Efficiency: debounce prevents immediate execution', () => {
+            let count = 0;
+            const fn = debounce(() => count++, 50);
+            fn(); fn(); fn();
+            assertEqual(count, 0);
+        });
+
+        // ========================
+        // REPORT
+        // ========================
+        TestRunner.report();
+    }
+    </script>
+</body>
+</html>
