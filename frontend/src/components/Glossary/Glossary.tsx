@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { fetchGlossary } from '../../services/api';
+import { motion, AnimatePresence } from 'framer-motion';
+import { fetchGlossary, GlossaryTerm } from '../../services/api';
 import './Glossary.css';
 
-const Glossary = () => {
-  const [terms, setTerms] = useState([]);
+const Glossary: React.FC = () => {
+  const [terms, setTerms] = useState<GlossaryTerm[]>([]);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,13 @@ const Glossary = () => {
     <section id="glossary" className="section glossary-section">
       <div className="container">
         <div className="section-header">
-          <span className="section-tag">Reference</span>
+          <motion.span 
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="section-tag"
+          >
+            Reference
+          </motion.span>
           <h2 className="section-title">Financial Glossary</h2>
           <p className="section-desc">Look up key financial terms explained in plain language.</p>
         </div>
@@ -58,15 +65,28 @@ const Glossary = () => {
         {loading ? (
           <div className="loading">Loading terms...</div>
         ) : (
-          <div className="glossary-grid">
-            {filteredTerms.map((t, i) => (
-              <div key={i} className="glossary-card">
-                <span className={`category-tag ${t.category}`}>{t.category}</span>
-                <h3>{t.term}</h3>
-                <p>{t.definition}</p>
-              </div>
-            ))}
-          </div>
+          <motion.div 
+            layout
+            className="glossary-grid"
+          >
+            <AnimatePresence mode='popLayout'>
+              {filteredTerms.map((t, i) => (
+                <motion.div 
+                  key={t.term}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.2 }}
+                  className="glossary-card"
+                >
+                  <span className={`category-tag ${t.category}`}>{t.category}</span>
+                  <h3>{t.term}</h3>
+                  <p>{t.definition}</p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
         )}
 
         {!loading && filteredTerms.length === 0 && (

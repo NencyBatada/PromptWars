@@ -1,20 +1,24 @@
-FROM nginx:1.27-alpine
+# Stage 1: Build Frontend
+FROM node:20-slim AS frontend-build
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ ./
+RUN npm run build
 
-# Remove default nginx config
-RUN rm /etc/nginx/conf.d/default.conf
+# Stage 2: Build Backend
+FROM node:20-slim
+WORKDIR /app
+COPY backend/package*.json ./
+RUN npm install --production
+COPY backend/ ./
+# Copy built frontend from Stage 1
+COPY --from=frontend-build /app/frontend/dist ./frontend-dist
 
-# Copy custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy static files
-COPY index.html /usr/share/nginx/html/
-COPY style.css /usr/share/nginx/html/
-COPY app.js /usr/share/nginx/html/
-COPY tests.html /usr/share/nginx/html/
-COPY tests.js /usr/share/nginx/html/
-
-# Cloud Run requires port 8080
 EXPOSE 8080
 
-# Run nginx in foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Environment variables
+ENV PORT=8080
+ENV NODE_ENV=production
+
+CMD ["node", "server.js"]

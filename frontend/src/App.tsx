@@ -7,8 +7,10 @@ import BudgetPlanner from './components/BudgetPlanner/BudgetPlanner';
 import Glossary from './components/Glossary/Glossary';
 import Quiz from './components/Quiz/Quiz';
 import Footer from './components/Footer/Footer';
+import AIAdvisor from './components/AIAdvisor/AIAdvisor';
 
-const App = () => {
+const App: React.FC = () => {
+
   return (
     <div className="app">
       {/* Ambient Background */}
@@ -28,8 +30,10 @@ const App = () => {
         <Quiz />
       </main>
       <Footer />
+      <AIAdvisor />
     </div>
   );
 };
+
 
 export default App;
