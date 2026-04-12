@@ -18,7 +18,8 @@ const AIAdvisor: React.FC = () => {
     setIsTyping(true);
 
     try {
-      const res = await fetch('http://localhost:5001/api/advisor', {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+      const res = await fetch(`${apiUrl}/advisor`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMsg, context: { topic: 'general' } })

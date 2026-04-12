@@ -45,11 +45,11 @@ const Quiz: React.FC = () => {
   if (loading) return <div className="quiz-loading">Preparing your challenge...</div>;
 
   return (
-    <section id="quiz" className="section quiz-section">
+    <section id="quiz" className="section quiz-section" aria-labelledby="quizTitle">
       <div className="container">
         <div className="section-header">
           <span className="section-tag">Challenge</span>
-          <h2 className="section-title">Test Your Knowledge</h2>
+          <h2 className="section-title" id="quizTitle">Test Your Knowledge</h2>
           <p className="section-desc">Prove your financial literacy with this quick quiz.</p>
         </div>
 
@@ -68,20 +68,28 @@ const Quiz: React.FC = () => {
                     <div className="progress-bar"><div className="fill" style={{ width: `${((currentIdx + 1)/questions.length)*100}%` }}></div></div>
                 </div>
                 <h3>{questions[currentIdx].question}</h3>
-                <div className="quiz-options">
+                <div className="quiz-options" role="radiogroup" aria-label="Answer options">
                   {questions[currentIdx].options.map((opt, i) => (
                     <button 
                       key={i}
                       className={`option-btn ${selectedIdx === i ? (questions[currentIdx].correct === i ? 'correct' : 'wrong') : ''}`}
                       onClick={() => handleAnswer(i)}
                       disabled={selectedIdx !== null}
+                      aria-pressed={selectedIdx === i}
                     >
                       {opt}
                     </button>
                   ))}
                 </div>
                 {feedback && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="quiz-feedback">
+                  <motion.div 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    className="quiz-feedback" 
+                    id="quizFeedback"
+                    aria-live="assertive"
+                    role="alert"
+                  >
                     <p>{feedback}</p>
                     <button className="btn btn-primary" onClick={nextQuestion}>
                       {currentIdx === questions.length - 1 ? 'Finish' : 'Next Question'}

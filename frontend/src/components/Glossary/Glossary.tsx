@@ -25,7 +25,7 @@ const Glossary: React.FC = () => {
   });
 
   return (
-    <section id="glossary" className="section glossary-section">
+    <section id="glossary" className="section glossary-section" aria-labelledby="glossaryTitle">
       <div className="container">
         <div className="section-header">
           <motion.span 
@@ -35,24 +35,28 @@ const Glossary: React.FC = () => {
           >
             Reference
           </motion.span>
-          <h2 className="section-title">Financial Glossary</h2>
+          <h2 id="glossaryTitle" className="section-title">Financial Glossary</h2>
           <p className="section-desc">Look up key financial terms explained in plain language.</p>
         </div>
 
         <div className="glossary-search">
           <div className="search-wrap">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon" aria-hidden="true">🔍</span>
             <input 
+              id="glossarySearch"
               type="search" 
+              aria-label="Search financial glossary terms"
               placeholder="Search terms..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <div className="filter-tags">
+          <div className="filter-tags" role="tablist" aria-label="Filter by category">
             {['all', 'saving', 'investing', 'budgeting', 'general'].map(cat => (
               <button 
                 key={cat}
+                role="tab"
+                aria-selected={filter === cat}
                 className={`filter-tag ${filter === cat ? 'active' : ''}`}
                 onClick={() => setFilter(cat)}
               >
@@ -63,16 +67,19 @@ const Glossary: React.FC = () => {
         </div>
 
         {loading ? (
-          <div className="loading">Loading terms...</div>
+          <div className="loading" aria-live="polite">Loading terms...</div>
         ) : (
           <motion.div 
             layout
             className="glossary-grid"
+            role="list"
+            aria-live="polite"
           >
             <AnimatePresence mode='popLayout'>
               {filteredTerms.map((t, i) => (
                 <motion.div 
                   key={t.term}
+                  role="listitem"
                   layout
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -90,7 +97,7 @@ const Glossary: React.FC = () => {
         )}
 
         {!loading && filteredTerms.length === 0 && (
-          <div className="glossary-empty">
+          <div className="glossary-empty" aria-live="assertive">
             <p>No terms match your search.</p>
           </div>
         )}

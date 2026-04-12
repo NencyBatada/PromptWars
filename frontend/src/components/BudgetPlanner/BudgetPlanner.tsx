@@ -42,22 +42,24 @@ const BudgetPlanner: React.FC = () => {
   };
 
   return (
-    <section id="budget" className="section budget-section">
+    <section id="budget" className="section budget-section" aria-labelledby="budgetTitle">
       <div className="container">
         <div className="section-header">
           <span className="section-tag">Planner</span>
-          <h2 className="section-title">Interactive Budget Planner</h2>
+          <h2 className="section-title" id="budgetTitle">Interactive Budget Planner</h2>
           <p className="section-desc">Track your spending and optimize your 50/30/20 rule.</p>
         </div>
 
         <div className="budget-grid">
           <div className="budget-inputs">
             <div className="input-card">
-              <h3>Monthly Income</h3>
+              <label htmlFor="budgetIncome"><h3>Monthly Income</h3></label>
               <div className="input-group large">
                 <span className="input-prefix">$</span>
                 <input 
                   type="number" 
+                  id="budgetIncome"
+                  aria-label="Monthly Income"
                   value={income} 
                   onChange={(e) => setIncome(Number(e.target.value))} 
                 />
@@ -67,17 +69,19 @@ const BudgetPlanner: React.FC = () => {
             <div className="expenses-card">
               <div className="card-header">
                 <h3>Expenses</h3>
-                <button className="add-btn" onClick={addExpense}>+ Add</button>
+                <button className="add-btn" onClick={addExpense} aria-label="Add new expense row">+ Add</button>
               </div>
               <div className="expense-list">
                 {expenses.map((exp, i) => (
-                  <div key={i} className="expense-row">
+                  <div key={i} className="expense-row" role="group" aria-label={`Expense row ${i+1}`}>
                     <input 
                       type="text" 
+                      aria-label="Expense Name"
                       value={exp.name} 
                       onChange={(e) => updateExpense(i, 'name', e.target.value)}
                     />
                     <select 
+                      aria-label="Expense Category"
                       value={exp.category} 
                       onChange={(e) => updateExpense(i, 'category', e.target.value as any)}
                     >
@@ -89,6 +93,7 @@ const BudgetPlanner: React.FC = () => {
                       <span>$</span>
                       <input 
                         type="number" 
+                        aria-label="Expense Amount"
                         value={exp.amount} 
                         onChange={(e) => updateExpense(i, 'amount', Number(e.target.value))}
                       />
@@ -105,7 +110,7 @@ const BudgetPlanner: React.FC = () => {
                     <span className="label">Total Expenses</span>
                     <span className="value">${totalExpenses.toLocaleString()}</span>
                 </div>
-                <div className="summary-card highlight">
+                <div className="summary-card highlight" aria-live="polite">
                     <span className="label">Remaining</span>
                     <span className="value">${remaining.toLocaleString()}</span>
                 </div>
@@ -113,7 +118,7 @@ const BudgetPlanner: React.FC = () => {
              
              <div className="chart-container">
                 <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
+                  <PieChart aria-label="Budget Breakdown Chart">
                     <Pie
                       data={chartData}
                       cx="50%"
@@ -122,6 +127,7 @@ const BudgetPlanner: React.FC = () => {
                       outerRadius={80}
                       paddingAngle={5}
                       dataKey="value"
+                      role="img"
                     >
                       {chartData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={Object.values(COLORS)[index % 3]} />
