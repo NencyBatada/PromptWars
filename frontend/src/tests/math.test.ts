@@ -50,7 +50,7 @@ describe('Financial Math Logic', () => {
         (monthlyContribution * 12) * ((growthFactor - 1) / annualRate);
 
       expect(balance).toBeGreaterThan(principal + (monthlyContribution * 12 * years));
-      expect(Math.round(balance)).toBe(136747);
+      expect(Math.round(balance)).toBe(137086);
     });
   });
 

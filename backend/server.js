@@ -170,7 +170,20 @@ app.post('/api/advisor', aiLimiter, async (req, res) => {
         3. Avoid specific stock tips; focus on foundational principles (saving, budgeting, passive investing).
         4. Keep it under 150 words.`;
 
-        const result = await model.generateContent(prompt);
+        const generateWithRetry = async (prompt, maxRetries = 3) => {
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    return await model.generateContent(prompt);
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    const delay = Math.pow(2, i) * 1000 + Math.random() * 1000;
+                    console.warn(`Gemini API error, retrying in ${Math.round(delay)}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+        };
+
+        const result = await generateWithRetry(prompt);
         const responseText = result.response.text();
 
         // Save to SQLite history using parameterized queries

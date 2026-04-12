@@ -1,0 +1,5 @@
+
+> finwise-backend@1.0.0 test
+> jest --coverage --forceExit
+
+sh: jest: command not found

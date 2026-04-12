@@ -83,7 +83,7 @@ const BudgetPlanner: React.FC = () => {
                     <select 
                       aria-label="Expense Category"
                       value={exp.category} 
-                      onChange={(e) => updateExpense(i, 'category', e.target.value as any)}
+                      onChange={(e) => updateExpense(i, 'category', e.target.value as Expense['category'])}
                     >
                       <option value="needs">Need</option>
                       <option value="wants">Want</option>
