@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BudgetPlanner = () => {
+const BudgetPlanner: React.FC = () => {
   return (
     <section id="budget" className="section">
       <div className="container" style={{ textAlign: 'center' }}>

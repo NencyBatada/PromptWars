@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Quiz = () => {
+const Quiz: React.FC = () => {
   return (
     <section id="quiz" className="section">
       <div className="container" style={{ textAlign: 'center' }}>

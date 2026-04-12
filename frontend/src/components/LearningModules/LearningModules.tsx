@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './LearningModules.css';
 
-const SavingsJar = () => {
+const SavingsJar: React.FC = () => {
+
   const [amount, setAmount] = useState(0);
   const GOAL = 2000;
   const INCREMENT = 100;
@@ -39,8 +40,9 @@ const SavingsJar = () => {
   );
 };
 
-const LearningModules = () => {
+const LearningModules: React.FC = () => {
   const [activeTab, setActiveTab] = useState('saving');
+
 
   return (
     <section id="learn" className="section learn-section">

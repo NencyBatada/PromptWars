@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Hero.css';
 
-const StatItem = ({ target, label }) => {
+const StatItem: React.FC<{ target: number, label: string }> = ({ target, label }) => {
+
   const [count, setCount] = useState(0);
   const elementRef = useRef(null);
   const [hasStarted, setHasStarted] = useState(false);
@@ -47,8 +48,9 @@ const StatItem = ({ target, label }) => {
   );
 };
 
-const Hero = () => {
+const Hero: React.FC = () => {
   return (
+
     <header className="hero">
       <div className="hero-content">
         <div className="hero-badge">✦ Your Financial Journey Starts Here</div>
