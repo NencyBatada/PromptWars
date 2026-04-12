@@ -1,0 +1,114 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 16px 0;
+    transition: all var(--transition-base);
+    background: transparent;
+}
+
+.navbar.scrolled {
+    background: rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 0;
+}
+
+.nav-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 800;
+    font-size: 1.3rem;
+}
+
+.brand-icon {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.5rem;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 8px;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+    background: var(--bg-glass-hover);
+}
+
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.nav-toggle span {
+    width: 24px;
+    height: 2px;
+    background: var(--text-primary);
+    border-radius: 2px;
+    transition: all var(--transition-fast);
+}
+
+@media (max-width: 768px) {
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 24px;
+        right: 24px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        flex-direction: column;
+        padding: 16px;
+        gap: 4px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all var(--transition-base);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .nav-links.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(10px);
+    }
+}

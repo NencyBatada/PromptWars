@@ -1,0 +1,118 @@
+.glossary-section {
+    background: var(--bg-primary);
+}
+
+.glossary-search {
+    margin-bottom: 48px;
+}
+
+.search-wrap {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto 24px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+}
+
+.search-wrap input {
+    width: 100%;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    padding: 16px 24px 16px 52px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all var(--transition-base);
+}
+
+.search-wrap input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background: var(--bg-glass-hover);
+    box-shadow: var(--shadow-glow);
+}
+
+.filter-tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-tag {
+    padding: 8px 20px;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-color);
+    border-radius: 100px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.filter-tag:hover {
+    color: var(--text-primary);
+    background: var(--bg-glass-hover);
+}
+
+.filter-tag.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.glossary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.glossary-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-light);
+    transform: translateY(-5px);
+}
+
+.category-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+}
+
+.category-tag.saving { background: rgba(0, 217, 166, 0.1); color: var(--accent-green); }
+.category-tag.investing { background: rgba(108, 99, 255, 0.1); color: var(--accent-primary-light); }
+.category-tag.budgeting { background: rgba(255, 107, 157, 0.1); color: var(--accent-secondary); }
+.category-tag.general { background: rgba(255, 209, 102, 0.1); color: var(--accent-yellow); }
+
+.glossary-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 12px;
+}
+
+.glossary-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}

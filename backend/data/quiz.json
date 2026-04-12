@@ -1,0 +1,92 @@
+[
+    {
+        "question": "What is the recommended size for an emergency fund?",
+        "options": ["1 month of expenses", "3-6 months of living expenses", "1 year of salary", "Whatever you can save"],
+        "correct": 1,
+        "explanation": "Financial experts recommend saving 3-6 months of living expenses as an emergency fund. This provides enough cushion for most unexpected situations."
+    },
+    {
+        "question": "What does compound interest mean?",
+        "options": [
+            "Interest paid only on the original deposit",
+            "Interest that decreases over time",
+            "Interest earned on both the principal and previously earned interest",
+            "A type of loan interest"
+        ],
+        "correct": 2,
+        "explanation": "Compound interest is interest calculated on both the initial principal and the accumulated interest — your earnings generate their own earnings."
+    },
+    {
+        "question": "In the 50/30/20 budget rule, what does the '20' represent?",
+        "options": ["Needs", "Wants", "Savings & debt repayment", "Taxes"],
+        "correct": 2,
+        "explanation": "The 50/30/20 rule suggests allocating 20% of your income to savings and debt repayment, 50% to needs, and 30% to wants."
+    },
+    {
+        "question": "Which investment type generally has the LOWEST risk?",
+        "options": ["Individual stocks", "Cryptocurrency", "Government bonds", "Options trading"],
+        "correct": 2,
+        "explanation": "Government bonds are backed by the government and are among the safest investments, though they offer lower returns compared to stocks."
+    },
+    {
+        "question": "What is dollar-cost averaging?",
+        "options": [
+            "Buying stocks only when prices drop",
+            "Investing a fixed amount at regular intervals regardless of price",
+            "Selling investments at the highest price",
+            "Converting foreign currencies"
+        ],
+        "correct": 1,
+        "explanation": "Dollar-cost averaging means investing the same amount regularly. When prices are low, you buy more shares; when high, fewer — reducing the impact of volatility."
+    },
+    {
+        "question": "What is the Rule of 72 used for?",
+        "options": [
+            "Calculating your tax rate",
+            "Estimating how long it takes to double your money",
+            "Determining your credit score",
+            "Setting your budget percentage"
+        ],
+        "correct": 1,
+        "explanation": "The Rule of 72: divide 72 by your annual return rate to estimate how many years it takes to double your investment. At 8%, it takes about 9 years."
+    },
+    {
+        "question": "What is an index fund?",
+        "options": [
+            "A fund tracking a specific market index like the S&P 500",
+            "A high-risk individual stock",
+            "A type of savings account",
+            "A government-issued bond"
+        ],
+        "correct": 0,
+        "explanation": "An index fund tracks a market index, providing broad diversification at a low cost. It's one of the best options for beginner investors."
+    },
+    {
+        "question": "Why is inflation a concern for savers?",
+        "options": [
+            "It increases the value of savings",
+            "It erodes the purchasing power of money over time",
+            "It has no effect on savings",
+            "It only affects large accounts"
+        ],
+        "correct": 1,
+        "explanation": "Inflation means prices rise over time. If your savings earn less interest than the inflation rate, your money actually loses purchasing power."
+    },
+    {
+        "question": "What does 'Pay Yourself First' mean?",
+        "options": [
+            "Spend your money on yourself before paying bills",
+            "Set aside savings before spending on anything else",
+            "Pay off all debts first",
+            "Keep all your money in cash"
+        ],
+        "correct": 1,
+        "explanation": "'Pay Yourself First' means automatically saving/investing a portion of your income as soon as you receive it, before spending on other things."
+    },
+    {
+        "question": "What is a good credit score range?",
+        "options": ["100-300", "300-500", "500-650", "670-850"],
+        "correct": 3,
+        "explanation": "Credit scores range from 300-850. A score of 670+ is generally considered good. A higher score gets you better interest rates and loan terms."
+    }
+]
