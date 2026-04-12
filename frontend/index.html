@@ -12,15 +12,31 @@
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#0a0a0f">
 
+    <!-- Open Graph -->
+    <meta property="og:title" content="FinWise — Financial Literacy Assistant" />
+    <meta property="og:description" content="Interactive tools and clear explanations to help you master saving, investing, and budgeting." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://prompt-wars-936999660940.us-central1.run.app" />
+
     <!-- Security: Content Security Policy & Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' http://localhost:5001 http://localhost:5173 https://www.google-analytics.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://prompt-wars-936999660940.us-central1.run.app http://localhost:5001 http://localhost:5173 https://www.google-analytics.com https://www.googletagmanager.com;">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Google Analytics (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
 
     <!-- Structured Data for Search Engines -->
     <script type="application/ld+json">
@@ -29,6 +45,7 @@
         "@type": "WebApplication",
         "name": "FinWise",
         "description": "Interactive financial literacy assistant for learning saving, investing, and budgeting.",
+        "url": "https://prompt-wars-936999660940.us-central1.run.app",
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web",
         "offers": {
@@ -40,14 +57,21 @@
         "audience": {
             "@type": "Audience",
             "audienceType": "General Public"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "FinWise"
         }
     }
     </script>
   </head>
   <body>
     <!-- Accessibility: Skip to main content -->
-    <a href="#learn" className="skip-to-content" id="skipToContent" style="position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;">Skip to main content</a>
+    <a href="#main-content" class="skip-to-content" id="skipToContent" style="position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;">Skip to main content</a>
     
+    <!-- ARIA live region for announcements -->
+    <div id="announcer" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
