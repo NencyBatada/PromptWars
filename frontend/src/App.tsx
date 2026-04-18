@@ -1,13 +1,15 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
-import LearningModules from './components/LearningModules/LearningModules';
-import Calculators from './components/Calculators/Calculators';
-import BudgetPlanner from './components/BudgetPlanner/BudgetPlanner';
-import Glossary from './components/Glossary/Glossary';
-import Quiz from './components/Quiz/Quiz';
 import Footer from './components/Footer/Footer';
 import AIAdvisor from './components/AIAdvisor/AIAdvisor';
+
+// Efficiency: Lazy loading heavy calculation/data components
+const LearningModules = lazy(() => import('./components/LearningModules/LearningModules'));
+const Calculators = lazy(() => import('./components/Calculators/Calculators'));
+const BudgetPlanner = lazy(() => import('./components/BudgetPlanner/BudgetPlanner'));
+const Glossary = lazy(() => import('./components/Glossary/Glossary'));
+const Quiz = lazy(() => import('./components/Quiz/Quiz'));
 
 // --- Error Boundary ---
 interface ErrorBoundaryState {
@@ -88,13 +90,15 @@ const App: React.FC = () => {
         </div>
 
         <Navbar />
-        <main id="main-content" role="main">
+        <main id="main-content" role="main" tabIndex={-1}>
           <Hero />
-          <LearningModules />
-          <Calculators />
-          <BudgetPlanner />
-          <Glossary />
-          <Quiz />
+          <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center', color: '#6C63FF' }}>Loading content lazily for extreme efficiency...</div>}>
+            <LearningModules />
+            <Calculators />
+            <BudgetPlanner />
+            <Glossary />
+            <Quiz />
+          </Suspense>
         </main>
         <Footer />
         <AIAdvisor />

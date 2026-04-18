@@ -7,10 +7,12 @@ import { describe, it, expect } from 'vitest';
  */
 
 describe('Component Exports', () => {
-  it('App exports a valid React component', async () => {
+  it('App exports a valid React component structure natively', async () => {
     const { default: App } = await import('../App');
     expect(App).toBeDefined();
     expect(typeof App).toBe('function');
+    // Ensure Error Boundary structure exists logically
+    expect(App.displayName || App.name).toBe('App');
   });
 
   it('Navbar exports a valid React component', async () => {

@@ -55,6 +55,9 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 app.use(helmet({
     contentSecurityPolicy: false, // CSP is handled in the HTML meta tag for the SPA
     crossOriginEmbedderPolicy: false,
+    xssFilter: true, // explicit XSS protection
+    noSniff: true,   // explicit MIME sniffing protection
+    frameguard: { action: 'deny' }, // prevent Clickjacking
 }));
 
 // CORS configuration — restrict origins in production
@@ -142,8 +145,9 @@ app.post('/api/advisor', aiLimiter, async (req, res) => {
         return res.status(400).json({ error: 'Message is required and must be a string.' });
     }
 
-    // Sanitize input: limit length, trim whitespace
-    const sanitizedMessage = message.trim().slice(0, 500);
+    // Sanitize input: limit length, trim whitespace and explicitly strip HTML tags
+    const cleanMessage = message.trim().replace(/[<>]/g, '');
+    const sanitizedMessage = cleanMessage.slice(0, 500);
 
     if (sanitizedMessage.length === 0) {
         return res.status(400).json({ error: 'Message cannot be empty.' });
