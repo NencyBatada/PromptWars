@@ -29,7 +29,7 @@ jobs:
             backend/package-lock.json
 
       - name: Install frontend dependencies
-        run: cd frontend && npm ci
+        run: cd frontend && npm install
 
       - name: Run frontend tests
         run: cd frontend && npm test
@@ -38,7 +38,7 @@ jobs:
         run: cd frontend && npm run lint || true
 
       - name: Install backend dependencies
-        run: cd backend && npm ci
+        run: cd backend && npm install
 
       - name: Run backend tests
         run: cd backend && npm test || true
