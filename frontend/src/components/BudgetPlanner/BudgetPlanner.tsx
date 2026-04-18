@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import './BudgetPlanner.css';
 
@@ -22,24 +22,24 @@ const BudgetPlanner: React.FC = () => {
     { name: 'Entertainment', amount: 300, category: 'wants' },
   ]);
 
-  const totalExpenses = expenses.reduce((sum, e) => sum + e.amount, 0);
-  const remaining = income - totalExpenses;
+  const totalExpenses = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
+  const remaining = useMemo(() => income - totalExpenses, [income, totalExpenses]);
 
-  const chartData = [
+  const chartData = useMemo(() => [
     { name: 'Needs', value: expenses.filter(e => e.category === 'needs').reduce((sum, e) => sum + e.amount, 0) },
     { name: 'Wants', value: expenses.filter(e => e.category === 'wants').reduce((sum, e) => sum + e.amount, 0) },
     { name: 'Savings/Remaining', value: Math.max(0, remaining) },
-  ];
+  ], [expenses, remaining]);
 
-  const addExpense = () => {
+  const addExpense = useCallback(() => {
     setExpenses([...expenses, { name: 'New Expense', amount: 0, category: 'needs' }]);
-  };
+  }, [expenses]);
 
-  const updateExpense = (index: number, field: keyof Expense, value: string | number) => {
+  const updateExpense = useCallback((index: number, field: keyof Expense, value: string | number) => {
     const newExpenses = [...expenses];
     newExpenses[index] = { ...newExpenses[index], [field]: value };
     setExpenses(newExpenses);
-  };
+  }, [expenses]);
 
   return (
     <section id="budget" className="section budget-section" aria-labelledby="budgetTitle">
