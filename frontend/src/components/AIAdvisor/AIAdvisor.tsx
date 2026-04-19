@@ -69,6 +69,7 @@ const AIAdvisor: React.FC = () => {
   return (
     <>
       <button
+        type="button"
         className="ai-trigger"
         onClick={() => setIsOpen(true)}
         aria-label="Open AI Financial Advisor chat"
@@ -97,6 +98,7 @@ const AIAdvisor: React.FC = () => {
                 <h3 id="aiAdvisorTitle">FinWise AI Advisor</h3>
               </div>
               <button
+                type="button"
                 onClick={() => setIsOpen(false)}
                 className="close-btn"
                 aria-label="Close AI Advisor"
@@ -148,6 +150,7 @@ const AIAdvisor: React.FC = () => {
                 maxLength={500}
               />
               <button
+                type="button"
                 onClick={handleSend}
                 disabled={!input.trim() || isTyping}
                 aria-label="Send message"

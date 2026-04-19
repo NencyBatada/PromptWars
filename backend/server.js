@@ -71,8 +71,8 @@ app.use(cors({
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(null, true); // Allow all for now, log for monitoring
-            console.warn(`CORS: Unexpected origin ${origin}`);
+            console.warn(`CORS: Unauthorized origin blocked: ${origin}`);
+            callback(new Error('CORS Error: Unauthorized origin'));
         }
     },
     methods: ['GET', 'POST'],

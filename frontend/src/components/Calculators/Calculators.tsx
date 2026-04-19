@@ -98,6 +98,7 @@ const CompoundInterestCalc: React.FC = () => {
             </div>
           </div>
           <button
+            type="button"
             className="btn btn-primary calc-btn"
             onClick={calculate}
             id="calcGenerateBtn"

@@ -69,7 +69,7 @@ const BudgetPlanner: React.FC = () => {
             <div className="expenses-card">
               <div className="card-header">
                 <h3>Expenses</h3>
-                <button className="add-btn" onClick={addExpense} aria-label="Add new expense row">+ Add</button>
+                <button type="button" className="add-btn" onClick={addExpense} aria-label="Add new expense row">+ Add</button>
               </div>
               <div className="expense-list">
                 {expenses.map((exp, i) => (
